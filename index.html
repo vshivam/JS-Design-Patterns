@@ -1,0 +1,16 @@
+<body>
+	
+	<img src="http://www.medhatspca.ca/sites/default/files/news_photos/2014-Apr-15/node-147/cute-little-cat.jpg" id="cat-pic">
+	<span id="click-count"> </span>
+</body>
+
+<script>
+	var count = 0;
+	var cat_pic = document.getElementById('cat-pic');
+	var click_count = document.getElementById('click-count');
+	cat_pic.addEventListener('click', function(){
+		count = count + 1;
+		click_count.innerHTML = count;
+	});
+	
+</script>
