@@ -16,6 +16,14 @@
 
 		getCatAtIndex: function(index){
 			return this.data[index];
+		}, 
+
+		setCurrentCat : function(cat){
+			this.currentCat = cat;
+		}, 
+
+		getCurrentCat : function(){
+			return this.currentCat;
 		}
 	}; 
 
@@ -45,12 +53,13 @@
 			this.img = $('#img');
 			this.count = $('#count');
 		},
-		render: function(cat){
-			this.catName.html(cat.name);		
-			this.img.attr('src', cat.src);
-			this.count.html(cat.count);
+		render: function(){
+			var currentCat = octopus.getCurrentCat();
+			this.catName.html(currentCat.name);		
+			this.img.attr('src', currentCat.src);
+			this.count.html(currentCat.count);
 			this.img.on("click", function(e){
-			
+				octopus.incrementCount(cat);	
 			});
 		}
 
@@ -65,6 +74,14 @@
 			listview.init();
 			catview.init();
 			catview.render(model.getCatAtIndex(0));
+		}, 
+
+		incrementCount: function(cat){
+			cat.count = ++cat.count;
+		}, 
+
+		getCurrentCat: function(){
+			return model.getCurrentCat();
 		}
 
 	};
