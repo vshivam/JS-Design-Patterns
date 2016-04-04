@@ -7,7 +7,7 @@
 		}, {
 			name : 'Cat2', 
 			count : 0,
-			src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv3M1RhqKMXKPgoIE6pksQrJ74NjU1_DURtqrdXedhhO0CKeLN'
+			src : 'http://www.medhatspca.ca/sites/default/files/news_photos/2014-Apr-15/node-147/cute-little-cat.jpg'
 		}], 
 
 		getAllCats : function(){
@@ -23,7 +23,15 @@
 		}, 
 
 		getCurrentCat : function(){
+			if(typeof this.currentCat === 'undefined'){
+				this.currentCat = this.data[0];
+			}
 			return this.currentCat;
+		}, 
+
+		incrementCurrentCount : function(){
+			var cat = this.getCurrentCat();
+			cat.count++;
 		}
 	}; 
 
@@ -33,16 +41,21 @@
 			console.log(this.catlist);
 			this.render();	
 		},
+
 		render: function(){
 			octopus.getCats().forEach(function(cat){
-				console.log(cat);
 				var htmlStr = '';
 				htmlStr = '<li>' + cat.name + '</li>';
-				console.log(htmlStr);
-				var listitem = listview.catlist.append(htmlStr);
-				listitem.on("click", function(e){
-					catview.render(cat);
-				});
+				var listitem = $(htmlStr);
+				listitem.on("click", (function(catCopy){
+					var func = function(){
+						octopus.setCurrentCat(catCopy);
+						catview.render();
+					};
+					return func;
+				})(cat));
+
+				listview.catlist.append(listitem);
 			});
 		}
 	};
@@ -52,17 +65,19 @@
 			this.catName = $('#name');
 			this.img = $('#img');
 			this.count = $('#count');
+			this.img.on("click", function(e){
+				octopus.incrementCurrentCount();	
+				catview.render();
+			});
 		},
+
 		render: function(){
 			var currentCat = octopus.getCurrentCat();
 			this.catName.html(currentCat.name);		
 			this.img.attr('src', currentCat.src);
 			this.count.html(currentCat.count);
-			this.img.on("click", function(e){
-				octopus.incrementCount(cat);	
-			});
+		
 		}
-
 	};
 
 	var octopus = {
@@ -73,17 +88,20 @@
 		init: function(){
 			listview.init();
 			catview.init();
-			catview.render(model.getCatAtIndex(0));
+			catview.render();
 		}, 
 
-		incrementCount: function(cat){
-			cat.count = ++cat.count;
+		incrementCurrentCount: function(){
+			model.incrementCurrentCount();
 		}, 
 
 		getCurrentCat: function(){
 			return model.getCurrentCat();
-		}
+		}, 
 
+		setCurrentCat: function(cat){
+			model.setCurrentCat(cat);
+		}
 	};
 
 	octopus.init();
