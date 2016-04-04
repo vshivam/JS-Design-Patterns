@@ -43,6 +43,7 @@
 		},
 
 		render: function(){
+			this.catlist.empty();
 			octopus.getCats().forEach(function(cat){
 				var htmlStr = '';
 				htmlStr = '<li>' + cat.name + '</li>';
@@ -69,6 +70,7 @@
 				octopus.incrementCurrentCount();	
 				catview.render();
 			});
+			this.render();
 		},
 
 		render: function(){
@@ -80,6 +82,49 @@
 		}
 	};
 
+	var adminview = {
+		init: function(){
+			this.display = false;
+			this.editorForm = $('#cat-editor');
+			this.adminBtn = $('#admin-btn');
+			this.cancelBtn = $('#cancel-btn');
+			
+			this.editorForm.on('submit', function(e){
+				e.preventDefault();
+				var data = $(this).serializeArray();	
+				octopus.updateCurrentCat(data[0].value, data[1].value, data[2].value);
+				catview.render();
+				listview.render();
+				adminview.display = false;
+				adminview.render();
+			});
+			
+			this.adminBtn.on('click', function(){
+				adminview.display = true;
+				adminview.render();
+			});
+
+			this.cancelBtn.on('click', function(){
+				adminview.display = false;
+				adminview.render();
+			});
+
+			this.render();
+		}, 
+
+		render: function(){
+			if(this.display){
+				$('#admin-mode').show();
+				var currentCat = octopus.getCurrentCat();
+				$('[name="name"]').val(currentCat.name);
+				$('[name="url"]').val(currentCat.src);
+				$('[name="clicks"]').val(currentCat.count);
+			} else {
+				$('#admin-mode').hide();
+			}
+		}
+	};
+
 	var octopus = {
 		getCats: function(){
 			return model.getAllCats();
@@ -88,7 +133,7 @@
 		init: function(){
 			listview.init();
 			catview.init();
-			catview.render();
+			adminview.init();
 		}, 
 
 		incrementCurrentCount: function(){
@@ -101,6 +146,13 @@
 
 		setCurrentCat: function(cat){
 			model.setCurrentCat(cat);
+		}, 
+
+		updateCurrentCat: function(name, url, count){
+			var cat = model.getCurrentCat();
+			cat.name = name;
+			cat.src = url;
+			cat.count = count;
 		}
 	};
 
