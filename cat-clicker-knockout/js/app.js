@@ -1,6 +1,7 @@
-var ClickCounterViewModel = function(name, url) {
+var ClickCounterViewModel = function(name, url, nicks) {
 	this.name = ko.observable(name);
 	this.imgSrc = ko.observable(url);
+	this.nicks = ko.observableArray(nicks);
 	this.numberOfClicks = ko.observable(0);
 
 	this.incrementCounter = function() {
@@ -11,7 +12,7 @@ var ClickCounterViewModel = function(name, url) {
 		if(this.numberOfClicks() < 10){
 			return "new born";
 		}
-		else if(this.numberOfClicks() > 10 && this.numberOfClicks() < 100) {
+		else if(this.numberOfClicks() > 10 && this.numberOfClicks() < 20) {
 			return "infant";
 		} else {
 			return "teen";
@@ -19,5 +20,5 @@ var ClickCounterViewModel = function(name, url) {
 	}, this);
 }
 
-var viewModel = new ClickCounterViewModel("Taffy", "http://exmoorpet.com/wp-content/uploads/2012/08/cat.png");
+var viewModel = new ClickCounterViewModel("Taffy", "http://exmoorpet.com/wp-content/uploads/2012/08/cat.png", ["cool cat", "super cool cat", "woot woot"]);
 ko.applyBindings(viewModel);
