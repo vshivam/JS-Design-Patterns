@@ -1,14 +1,14 @@
-var ClickCounterViewModel = function(cat) {
-	this.currentCat = ko.observable(cat);
+var ClickCounterViewModel = function() {
+	this.currentCat = ko.observable();
 	this.incrementCounter = function() {
-		return this.currentCat().numberOfClicks(this.currentCat().numberOfClicks() + 1);
+		return this.numberOfClicks(this.numberOfClicks() + 1);
 	};
 }
 
-var Cat = function(name, url, nicks){
-	this.name = ko.observable(name);
-	this.imgSrc = ko.observable(url);
-	this.nicks = ko.observableArray(nicks);
+var Cat = function(){
+	this.name = ko.observable("Taffy");
+	this.imgSrc = ko.observable("http://exmoorpet.com/wp-content/uploads/2012/08/cat.png");
+	this.nicks = ko.observableArray(["cool cat", "super cool cat", "woot woot"]);
 	this.numberOfClicks = ko.observable(0);
 
 	this.level = ko.computed(function() {
@@ -23,7 +23,8 @@ var Cat = function(name, url, nicks){
 	}, this);
 }
 
-var cat = new Cat("Taffy", "http://exmoorpet.com/wp-content/uploads/2012/08/cat.png", ["cool cat", "super cool cat", "woot woot"]);
-
-var viewModel = new ClickCounterViewModel(cat);
+var viewModel = new ClickCounterViewModel();
 ko.applyBindings(viewModel);
+
+var cat = new Cat();
+viewModel.currentCat(cat);
